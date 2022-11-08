@@ -3,6 +3,8 @@ import pygame_gui
 import sys
 import requests
 
+backgroundColor = (99, 107, 107)
+
 headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
 titleOfFilm=""
 pygame.init()
@@ -44,7 +46,7 @@ def main():
         
         manager.update(UI_REFRESH_RATE)
 
-        SCREEN.fill("white")
+        SCREEN.fill(backgroundColor)
 
         manager.draw_ui(SCREEN)
 
