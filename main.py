@@ -1,17 +1,24 @@
+#important imports
 import pygame
 import pygame_gui
 import sys
 import requests
 
+<<<<<<< Updated upstream
 backgroundColor = (99, 107, 107)
 
+=======
+#Funny header for get request
+>>>>>>> Stashed changes
 headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
-titleOfFilm=""
+
+#Initialize pygame
 pygame.init()
 
+#Declare various variables
 WIDTH, HEIGHT = 1500, 800
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Text Input in PyGame")
+pygame.display.set_caption("Text Input in PyGame Year movie gross")
 
 manager = pygame_gui.UIManager((WIDTH, HEIGHT))
 
