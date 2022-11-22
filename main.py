@@ -3,11 +3,17 @@ import pygame
 import pygame_gui
 import sys
 import requests
-import urllib.parse
+import random
+
 
 
 #Funny header for get request
-headers = {'content-type': '*/*', 'Accept-Charset': 'UTF-8'}
+headers = {
+    "X-RapidAPI-Key": "Insert API key here",
+    "X-RapidAPI-Host": "imdb8.p.rapidapi.com"
+}
+
+url = "https://imdb8.p.rapidapi.com/auto-complete"
 
 image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/120px-HD_transparent_picture.png"
 img_data = requests.get(image_url).content
@@ -32,7 +38,11 @@ clock = pygame.time.Clock()
 
 
 def main():
-    titleOfFilm=""
+    titleOfMovie=""
+    picOfMovie="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/120px-HD_transparent_picture.png"
+    widthPic=0
+    heightPic=0
+    picScale=0
     font = pygame.font.SysFont('Calibri', 35)
     while True:
         UI_REFRESH_RATE = clock.tick(60)/1000
@@ -45,25 +55,15 @@ def main():
                 if(event.text.isnumeric()):
                     if(int(event.text)>=1913 and int(event.text)<=2022):
                         # print(event.text)
-                        url = f'https://en.wikipedia.org/wiki/{event.text}_in_film'
-                        r = requests.get(url, headers=headers)
-                        rText= r.content.decode()
-                        rankTextPos= rText.find(">Rank<")
-                        rankTitlePos= rText[rankTextPos:rankTextPos+250].find("title=")
-                        rankLinkPos= rText[rankTextPos:rankTextPos+250].find("href=")
-                        titleOfFilm = rText[rankTextPos+rankTitlePos+6:rankTextPos+rankTitlePos+200].split('"')[1]
-                        linkToPage = rText[rankTextPos+rankLinkPos+6:rankTextPos+rankLinkPos+200].split('"')[0]
-                        # print(rText[rankTextPos+rankLinkPos+6:rankTextPos+rankLinkPos+200].split('"')[0])
-                        url2 = f'https://en.wikipedia.org{linkToPage}'
-                        print(urllib.parse.unquote(linkToPage))
-                        r2 = requests.get(url2, headers=headers)
-                        rText2= r2.content.decode()
-                        imageLinkPos = rText2.find('"og:image"')
-                        linkToImage = rText2[imageLinkPos+20:imageLinkPos+15+500].split('"')[0]
-                        print(linkToImage)
-                        print(titleOfFilm)
-                        image_url = linkToImage
-                        img_data = requests.get(image_url).content
+                        querystring = {"q": f"y: {event.text}"}
+                        response = requests.request("GET", url, headers=headers, params=querystring)
+                        index = random.randrange(0,8)
+                        titleOfMovie = response.json()['d'][index]['l']
+                        picOfMovie = response.json()['d'][index]['i']['imageUrl']
+                        widthPic = response.json()['d'][index]['i']['width']
+                        heightPic = response.json()['d'][index]['i']['width']
+                        picScale=400/widthPic
+                        img_data = requests.get(picOfMovie).content
                         with open('image_name.jpg', 'wb') as handler:
                             handler.write(img_data)
                     else:
@@ -92,9 +92,9 @@ def main():
             img = pygame.image.load("image_name.jpg")
         except:
             print("Bad error handling3")
-
+        img = pygame.transform.scale(img, (widthPic*picScale,heightPic*picScale))
         SCREEN.blit(img, (100,300))
-        text = font.render(titleOfFilm, True,(0,0,0))
+        text = font.render(titleOfMovie, True,(0,0,0))
         SCREEN.blit(text,(50,50))
 
 
