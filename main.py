@@ -11,7 +11,7 @@ engine = pyttsx3.init()
 
 # Funny header for get request
 headers = {
-    "X-RapidAPI-Key": "Insert API key here",
+    "X-RapidAPI-Key": "Key",
     "X-RapidAPI-Host": "imdb8.p.rapidapi.com"
 }
 
@@ -40,12 +40,16 @@ clock = pygame.time.Clock()
 
 def main():
     enterNow = False
+    yearS=""
     titleOfMovie = ""
     picOfMovie = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/120px-HD_transparent_picture.png"
     widthPic = 0
     heightPic = 0
     picScale = 0
     font = pygame.font.SysFont('Calibri', 35)
+
+    engine.say("Welcome to the time machine.")
+    engine.runAndWait()
 
     while True:
         UI_REFRESH_RATE = clock.tick(60)/1000
@@ -58,19 +62,18 @@ def main():
                 if (event.text.isnumeric()):
                     if (int(event.text) >= 1913 and int(event.text) <= 2022):
                         # print(event.text)
-                        querystring = {"q": f"y: {event.text}"}
-                        response = requests.request(
-                            "GET", url, headers=headers, params=querystring)
+                        querystring = {"q": f"{event.text}"}
+                        response = requests.request("GET", url, headers=headers, params=querystring)
                         index = random.randrange(0, 8)
-                        print(response.json())
+                        print(response.json()['d'][index])
                         titleOfMovie = response.json()['d'][index]['l']
-                        picOfMovie = response.json(
-                        )['d'][index]['i']['imageUrl']
+                        picOfMovie = response.json()['d'][index]['i']['imageUrl']
                         widthPic = response.json()['d'][index]['i']['width']
                         heightPic = response.json()['d'][index]['i']['width']
                         picScale = 400/widthPic
                         img_data = requests.get(picOfMovie).content
 
+                        yearS=f'{event.text}'
                         enterNow = True
 
                         with open('image_name.jpg', 'wb') as handler:
@@ -102,14 +105,14 @@ def main():
             print("Bad error handling3")
         img = pygame.transform.scale(
             img, (widthPic*picScale, heightPic*picScale))
-        SCREEN.blit(img, (100, 300))
+        SCREEN.blit(img, (600, 350))
         text = font.render(titleOfMovie, True, (0, 0, 0))
         SCREEN.blit(text, (50, 50))
 
         pygame.display.update()
 
         if (enterNow == True):
-            engine.say("In " + event.text + " " + titleOfMovie + " came out.")
+            engine.say("Welcome to " + yearS + ". In this year " + titleOfMovie + " came out.")
             engine.runAndWait()
 
         enterNow = False
