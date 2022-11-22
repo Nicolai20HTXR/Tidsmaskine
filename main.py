@@ -76,7 +76,7 @@ def main():
         
         manager.update(UI_REFRESH_RATE)
 
-        SCREEN.fill("white")
+        SCREEN.fill((99, 107, 120))
 
         manager.draw_ui(SCREEN)
 
