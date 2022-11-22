@@ -9,7 +9,7 @@ import random
 
 #Funny header for get request
 headers = {
-    "X-RapidAPI-Key": "Insert API key here",
+    "X-RapidAPI-Key": "52c1c76369msh270fa35daee6071p109f18jsnc1110feba312",
     "X-RapidAPI-Host": "imdb8.p.rapidapi.com"
 }
 
@@ -55,7 +55,7 @@ def main():
                 if(event.text.isnumeric()):
                     if(int(event.text)>=1913 and int(event.text)<=2022):
                         # print(event.text)
-                        querystring = {"q": f"y: {event.text}"}
+                        querystring = {"q": f"y={event.text}"}
                         response = requests.request("GET", url, headers=headers, params=querystring)
                         index = random.randrange(0,8)
                         titleOfMovie = response.json()['d'][index]['l']
