@@ -4,12 +4,14 @@ import pygame_gui
 import sys
 import requests
 import random
+import pyttsx3
 
+engine = pyttsx3.init()
 
 
 #Funny header for get request
 headers = {
-    "X-RapidAPI-Key": "Insert API key here",
+    "X-RapidAPI-Key": "key",
     "X-RapidAPI-Host": "imdb8.p.rapidapi.com"
 }
 
@@ -38,12 +40,14 @@ clock = pygame.time.Clock()
 
 
 def main():
-    titleOfMovie=""
-    picOfMovie="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/120px-HD_transparent_picture.png"
-    widthPic=0
-    heightPic=0
-    picScale=0
+    enterNow=False
+    titleOfMovie = ""
+    picOfMovie = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/120px-HD_transparent_picture.png"
+    widthPic = 0
+    heightPic = 0
+    picScale = 0
     font = pygame.font.SysFont('Calibri', 35)
+    
     while True:
         UI_REFRESH_RATE = clock.tick(60)/1000
         for event in pygame.event.get():
@@ -64,6 +68,10 @@ def main():
                         heightPic = response.json()['d'][index]['i']['width']
                         picScale=400/widthPic
                         img_data = requests.get(picOfMovie).content
+
+                        
+                        enterNow = True
+
                         with open('image_name.jpg', 'wb') as handler:
                             handler.write(img_data)
                     else:
@@ -75,7 +83,7 @@ def main():
             manager.process_events(event)
         
         manager.update(UI_REFRESH_RATE)
-
+        
         SCREEN.fill((99, 107, 120))
 
         manager.draw_ui(SCREEN)
@@ -97,8 +105,13 @@ def main():
         text = font.render(titleOfMovie, True,(0,0,0))
         SCREEN.blit(text,(50,50))
 
-
         pygame.display.update()
+
+        if (enterNow == True):
+            engine.say("In " + event.text + " " + titleOfMovie + " came out.")
+            engine.runAndWait()
+        
+        enterNow = False
     
 
 main()
