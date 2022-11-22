@@ -11,7 +11,7 @@ engine = pyttsx3.init()
 
 #Funny header for get request
 headers = {
-    "X-RapidAPI-Key": "key",
+    "X-RapidAPI-Key": "",
     "X-RapidAPI-Host": "imdb8.p.rapidapi.com"
 }
 
@@ -59,7 +59,7 @@ def main():
                 if(event.text.isnumeric()):
                     if(int(event.text)>=1913 and int(event.text)<=2022):
                         # print(event.text)
-                        querystring = {"q": f"y: {event.text}"}
+                        querystring = {"q": f"{event.text}"}
                         response = requests.request("GET", url, headers=headers, params=querystring)
                         index = random.randrange(0,8)
                         titleOfMovie = response.json()['d'][index]['l']
@@ -101,7 +101,7 @@ def main():
         except:
             print("Bad error handling3")
         img = pygame.transform.scale(img, (widthPic*picScale,heightPic*picScale))
-        SCREEN.blit(img, (100,300))
+        SCREEN.blit(img, (600,350))
         text = font.render(titleOfMovie, True,(0,0,0))
         SCREEN.blit(text,(50,50))
 
