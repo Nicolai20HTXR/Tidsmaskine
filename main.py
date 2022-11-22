@@ -58,6 +58,7 @@ def main():
                         querystring = {"q": f"y={event.text}"}
                         response = requests.request("GET", url, headers=headers, params=querystring)
                         index = random.randrange(0,8)
+                        print(response.json())
                         titleOfMovie = response.json()['d'][index]['l']
                         picOfMovie = response.json()['d'][index]['i']['imageUrl']
                         widthPic = response.json()['d'][index]['i']['width']
