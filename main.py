@@ -93,7 +93,7 @@ def main():
         except:
             print("Bad error handling3")
         img = pygame.transform.scale(img, (widthPic*picScale,heightPic*picScale))
-        SCREEN.blit(img, (100,300))
+        SCREEN.blit(img, (600,350))
         text = font.render(titleOfMovie, True,(0,0,0))
         SCREEN.blit(text,(50,50))
 
